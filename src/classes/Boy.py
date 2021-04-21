@@ -19,6 +19,20 @@ class Boy(pygame.sprite.Sprite):
         self.walkSpeed = 5
         self.runSpeed = 10
         self.running = False
+        self.points = 0
+        self.health = 100
+        self.alive = True
+
+    def hit(self):
+        self.health -= 5
+        if self.health <= 0:
+            self.alive = False
+    
+    def addPoints(self, point):
+        self.points += point
+
+    def removePoints(self, point):
+        self.points -+ point
 
     def update(self, direction):
         if self.running:
@@ -46,6 +60,5 @@ class Boy(pygame.sprite.Sprite):
             self.rect.right = SCREEN_WIDTH/2
         if self.rect.top <= 0:
             self.rect.top = 0
-
-        
-
+        if self.rect.bottom >= SCREEN_HEIGHT:
+            self.rect.bottom = SCREEN_HEIGHT
