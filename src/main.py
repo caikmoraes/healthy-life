@@ -6,10 +6,6 @@ from classes.HalthyFood import HealthyFood
 
 pygame.init()
 
-UP = 'up'
-DOWN = 'down'
-LEFT = 'left'
-RIGHT = 'right'
 
 # Game screen size
 SCREEN_WIDTH = 800
@@ -23,10 +19,6 @@ BASICFONT = pygame.font.Font('freesansbold.ttf', 16)
 pygame.display.set_caption("Healthy-Life")
 
 # Imagem personagens parados
-boy_stop_right = pygame.image.load("assets/img/boy_stop.png").convert_alpha()
-girl_stop_right = pygame.image.load("assets/img/girl_stop.png").convert_alpha()
-boy_stop_left = pygame.transform.flip(boy_stop_right, True, False)
-girl_stop_left = pygame.transform.flip(girl_stop_right, True, False)
 
 boy = Boy('Caik')
 
