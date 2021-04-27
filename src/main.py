@@ -66,7 +66,8 @@ while True:
                 boy.addPoints(1)
 
 
-    boy.update(pygame.key.get_pressed())
+    key = pygame.key.get_pressed()
+    boy.update(key)
     fatFoods.update()
     healthyFoods.update()
 
