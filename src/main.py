@@ -6,6 +6,10 @@ from classes.HalthyFood import HealthyFood
 
 pygame.init()
 
+UP = "up"
+DOWN = "down"
+LEFT = "left"
+RIGHT = "right"
 
 # Game screen size
 SCREEN_WIDTH = 800
@@ -18,7 +22,6 @@ BASICFONT = pygame.font.Font('freesansbold.ttf', 16)
 
 pygame.display.set_caption("Healthy-Life")
 
-# Imagem personagens parados
 
 boy = Boy('Caik')
 
@@ -38,8 +41,12 @@ pygame.time.set_timer(ADD_POINTS, 500)
 
 clock = pygame.time.Clock()
 
+walkLeft = walkUp = walkRight = walkDown = False
+
+direction = DOWN
+
 while True:
-    clock.tick(60)
+    clock.tick(30)
     SCREEN.fill((80,80,80))
 
     for event in pygame.event.get():
@@ -50,9 +57,53 @@ while True:
                 pygame.quit()
             if event.key == K_LSHIFT:
                 boy.running = True
+            if event.key == K_LEFT:
+                walkLeft = True
+                walkRight = False
+                if not walkUp and not walkDown:
+                    direction = LEFT
+            if event.key == K_UP:
+                walkUp = True
+                walkDown = False
+                if not walkLeft and not walkRight:
+                    direction = UP
+            if event.key == K_DOWN:
+                walkDown = True
+                walkUp = False
+                if not walkLeft and not walkRight:
+                    direction = DOWN
+            if event.key == K_RIGHT:
+                walkRight = True
+                walkLeft = False
+                if not walkUp and not walkDown:
+                    direction = RIGHT
         elif event.type == KEYUP:
             if event.key == K_LSHIFT:
                 boy.running = False
+            if event.key == K_UP:
+                walkUp = False
+                if walkLeft:
+                    direction = LEFT
+                if walkRight:
+                    direction = RIGHT
+            elif event.key == K_DOWN:
+                walkDown = False
+                if walkLeft:
+                    direction = LEFT
+                if walkRight:
+                    direction = RIGHT
+            elif event.key == K_LEFT:
+                walkLeft = False
+                if walkUp:
+                    direction = UP
+                if walkDown:
+                    direction = DOWN
+            elif event.key == K_RIGHT:
+                walkRight = False
+                if walkUp:
+                    direction = UP
+                if walkDown:
+                    direction = DOWN
         elif event.type == ADD_FATFOOD:
             newFatFood = FatFood()
             fatFoods.add(newFatFood)
@@ -66,10 +117,13 @@ while True:
                 boy.addPoints(1)
 
 
-    key = pygame.key.get_pressed()
-    boy.update(key)
+    if walkRight or walkDown or walkLeft or walkUp:
+        boy.update(direction)
+
+
     fatFoods.update()
     healthyFoods.update()
+
 
 
     if not boy.alive:
@@ -80,7 +134,7 @@ while True:
         SCREEN.blit(gameOver, gameOverRect)
     else:
         for sprite in gameSprites:
-            SCREEN.blit(sprite.surf, sprite.rect)
+            SCREEN.blit(sprite.img, sprite.rect)
 
         for food in healthyFoods:
             if pygame.sprite.collide_rect(food, boy):
@@ -89,8 +143,7 @@ while True:
 
         for food in fatFoods:
             if pygame.sprite.collide_rect(food, boy):
-                boy.removePoints(20)
-                boy.hit()
+                boy.hit(food)
                 food.kill()
 
 
