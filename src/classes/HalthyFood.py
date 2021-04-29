@@ -10,7 +10,7 @@ foodImgs = glob.glob('images/foods/healthy_food*.png')
 class HealthyFood(pygame.sprite.Sprite):
     def __init__(self):
         super(HealthyFood, self).__init__()
-        icon = random.randint(0,2)
+        icon = random.randint(0,5)
         iconImg = pygame.image.load(foodImgs[icon])
         self.speed = random.randint(5, 10)
         self.img = pygame.transform.scale(iconImg, (32, 32))
