@@ -1,3 +1,4 @@
+from classes.Girl import Girl
 import pygame
 from pygame.locals import *
 from classes.Boy import Boy
@@ -24,11 +25,13 @@ pygame.display.set_caption("Healthy-Life")
 
 
 boy = Boy('Caik')
+girl = Girl('Rebeca')
 
 fatFoods = pygame.sprite.Group()
 healthyFoods = pygame.sprite.Group()
 gameSprites = pygame.sprite.Group()
 gameSprites.add(boy)
+gameSprites.add(girl)
 
 ADD_FATFOOD = pygame.USEREVENT + 1
 ADD_HEALTHYFOOD = pygame.USEREVENT + 2

@@ -12,14 +12,13 @@ LEFT = "left"
 RIGHT = "right"
 
 
-
-class Boy(pygame.sprite.Sprite):
+class Girl(pygame.sprite.Sprite):
     def __init__(self, name):
-        super(Boy, self).__init__()
-        self.walkingUp = glob.glob('images/boy/boy_up*.png')
-        self.walkingLeft = glob.glob('images/boy/boy_left*.png')
-        self.walkingDown = glob.glob('images/boy/boy_down*.png')
-        self.walkingRight = glob.glob('images/boy/boy_right*.png')
+        super(Girl, self).__init__()
+        self.walkingUp = glob.glob('images/girl/girl_up*.png')
+        self.walkingLeft = glob.glob('images/girl/girl_left*.png')
+        self.walkingDown = glob.glob('images/girl/girl_down*.png')
+        self.walkingRight = glob.glob('images/girl/girl_right*.png')
         self.walkingUp.sort()
         self.walkingLeft.sort()
         self.walkingDown.sort()
