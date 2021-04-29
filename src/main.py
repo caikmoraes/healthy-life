@@ -138,7 +138,7 @@ while True:
 
         for food in healthyFoods:
             if pygame.sprite.collide_rect(food, boy):
-                boy.addPoints(30)
+                boy.addPoints(food.points)
                 food.kill()
 
         for food in fatFoods:

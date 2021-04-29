@@ -6,14 +6,15 @@ SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 600
 
 foodImgs = glob.glob('images/foods/healthy_food*.png')
-img = pygame.image.load(foodImgs[0])
-test_img = pygame.transform.scale(img, (32, 32))
 
 class HealthyFood(pygame.sprite.Sprite):
     def __init__(self):
         super(HealthyFood, self).__init__()
+        icon = random.randint(0,2)
+        iconImg = pygame.image.load(foodImgs[icon])
         self.speed = random.randint(5, 10)
-        self.img = test_img
+        self.img = pygame.transform.scale(iconImg, (32, 32))
+        self.points = 20 + icon
         self.rect = self.img.get_rect()
         self.rect.center = (
             random.randint(SCREEN_WIDTH + 20, SCREEN_WIDTH + 40),

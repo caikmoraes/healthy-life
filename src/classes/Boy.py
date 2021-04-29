@@ -92,9 +92,6 @@ class Boy(pygame.sprite.Sprite):
     def addPoints(self, point):
         self.points += point
 
-    def removePoints(self, point):
-        self.points -+ point
-
     def update(self, direction):
         if direction == UP:
             self.rect.move_ip(0, -self.walkSpeed)
