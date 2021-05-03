@@ -25,7 +25,7 @@ class Girl(pygame.sprite.Sprite):
         self.walkingRight.sort()
         self.name = name
         self.walkSpeed = 3
-        self.runSpeed = 5
+        self.runSpeed = 6
         self.running = False
         self.points = 0
         self.health = 100
@@ -45,32 +45,61 @@ class Girl(pygame.sprite.Sprite):
         self.points += point
 
     def update(self, direction):
-        if direction == UP:
-            self.rect.move_ip(0, -self.walkSpeed)
-            self.img = pygame.image.load(self.walkingUp[self.pos])
-            if self.pos == self.pos_max:
-                self.pos = 1
-            else:
-                self.pos += 1
-        elif direction == DOWN:
-            self.rect.move_ip(0, self.walkSpeed)
-            self.img = pygame.image.load(self.walkingDown[self.pos])
-            if self.pos == self.pos_max:
-                self.pos = 1
-            else:
-                self.pos += 1
-        elif direction == LEFT:
-            self.rect.move_ip(-self.walkSpeed, 0)
-            self.img = pygame.image.load(self.walkingLeft[self.pos])
-            if self.pos == self.pos_max:
-                self.pos = 1
-            else:
-                self.pos += 1
-        elif direction == RIGHT:
-            self.rect.move_ip(self.walkSpeed, 0)
-            self.img = pygame.image.load(self.walkingRight[self.pos])
-            if self.pos >= self.pos_max:
-                self.pos = 1
-            else:
-                self.pos += 1
-            
+        if self.running:
+            if direction == UP:
+                self.rect.move_ip(0, -self.runSpeed)
+                self.img = pygame.image.load(self.walkingUp[self.pos])
+                if self.pos == self.pos_max:
+                    self.pos = 1
+                else:
+                    self.pos += 1
+            elif direction == DOWN:
+                self.rect.move_ip(0, self.runSpeed)
+                self.img = pygame.image.load(self.walkingDown[self.pos])
+                if self.pos == self.pos_max:
+                    self.pos = 1
+                else:
+                    self.pos += 1
+            elif direction == LEFT:
+                self.rect.move_ip(-self.runSpeed, 0)
+                self.img = pygame.image.load(self.walkingLeft[self.pos])
+                if self.pos == self.pos_max:
+                    self.pos = 1
+                else:
+                    self.pos += 1
+            elif direction == RIGHT:
+                self.rect.move_ip(self.runSpeed, 0)
+                self.img = pygame.image.load(self.walkingRight[self.pos])
+                if self.pos >= self.pos_max:
+                    self.pos = 1
+                else:
+                    self.pos += 1
+        else:
+            if direction == UP:
+                self.rect.move_ip(0, -self.walkSpeed)
+                self.img = pygame.image.load(self.walkingUp[self.pos])
+                if self.pos == self.pos_max:
+                    self.pos = 1
+                else:
+                    self.pos += 1
+            elif direction == DOWN:
+                self.rect.move_ip(0, self.walkSpeed)
+                self.img = pygame.image.load(self.walkingDown[self.pos])
+                if self.pos == self.pos_max:
+                    self.pos = 1
+                else:
+                    self.pos += 1
+            elif direction == LEFT:
+                self.rect.move_ip(-self.walkSpeed, 0)
+                self.img = pygame.image.load(self.walkingLeft[self.pos])
+                if self.pos == self.pos_max:
+                    self.pos = 1
+                else:
+                    self.pos += 1
+            elif direction == RIGHT:
+                self.rect.move_ip(self.walkSpeed, 0)
+                self.img = pygame.image.load(self.walkingRight[self.pos])
+                if self.pos >= self.pos_max:
+                    self.pos = 1
+                else:
+                    self.pos += 1
