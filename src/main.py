@@ -29,9 +29,30 @@ clock = pygame.time.Clock()
 
 players = []
 
-def ranking():
-    # Implementar ranking
+ranking = True
+def close_ranking():
+    global ranking
+    ranking = False
     pass
+
+def order_ranking(player):
+    return player.max_pontuation
+
+def show_ranking():
+    global players
+    players.sort(key= order_ranking, reverse=True)
+    while True:
+        ranking_screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), 0, 32)
+        menu = pygame_menu.Menu(500, 500, 'Ranking',theme=pygame_menu.themes.THEME_ORANGE)
+        if len(players) <= 0:
+            menu.add.label('Sem jogadores cadastrados')
+        else:
+            for p in players:
+                menu.add.label('%s --> %d' % (p.name, p.max_pontuation))
+
+        menu.add.button('Voltar', action=main_menu)
+        menu.mainloop(ranking_screen)
+    
 
 def show_instructions():
     # Necessita criar instruções
@@ -60,9 +81,10 @@ def home():
     walkLeft = walkUp = walkRight = walkDown = False
     if gender == 1:
         character = Boy(characterName)
-        players.append(character)
     elif gender == 2:
         character = Girl(characterName)
+
+    if not players.__contains__(character):
         players.append(character)
     inHome = True
     while inHome:
@@ -133,10 +155,10 @@ def home():
         pygame.display.flip()
 
 def game(character):
+    walkLeft = walkUp = walkRight = walkDown = False
     character.rect.center = (SCREEN_WIDTH/2, SCREEN_HEIGHT/2)
     running = True
     character.running = running
-    walkLeft = walkUp = walkRight = walkDown = False
 
     direction = DOWN
     fatFoods = pygame.sprite.Group()
@@ -144,12 +166,13 @@ def game(character):
     gameSprites = pygame.sprite.Group()
     gameSprites.add(character)
     ADD_FATFOOD = pygame.USEREVENT + 1
-    ADD_HEALTHYFOOD = pygame.USEREVENT + 2
     pygame.time.set_timer(ADD_FATFOOD, 500)
+    ADD_HEALTHYFOOD = pygame.USEREVENT + 2
     pygame.time.set_timer(ADD_HEALTHYFOOD, 500)
-
     ADD_POINTS = pygame.USEREVENT + 3
     pygame.time.set_timer(ADD_POINTS, 500)
+    SET_ANIMATION = pygame.USEREVENT + 4
+    pygame.time.set_timer(SET_ANIMATION, 35)
     while running:
         
         clock.tick(30)
@@ -217,6 +240,8 @@ def game(character):
             elif event.type == ADD_POINTS:
                 if character.alive:
                     character.addPoints(1)
+            elif event.type == SET_ANIMATION:
+                character.next_animation()
 
 
         if walkRight or walkDown or walkLeft or walkUp:
@@ -228,9 +253,9 @@ def game(character):
         if not character.alive:
             character.new_record()
             character.kill()
-            gameOver = BASICFONT.render('GAME OVER.', True, (255,50,50))
+            gameOver = BASICFONT.render('GAME OVER. Pressione ESC para ir para o quarto.', True, (255,50,50))
             gameOverRect = gameOver.get_rect()
-            gameOverRect.bottomleft = (SCREEN_WIDTH/2, SCREEN_HEIGHT/2)
+            gameOverRect.bottomleft = (SCREEN_WIDTH/2 - 200, SCREEN_HEIGHT/2)
             SCREEN.blit(gameOver, gameOverRect)
         else:
             for sprite in gameSprites:
@@ -260,13 +285,18 @@ def game(character):
 
         pygame.display.flip()
 
-while True:
-    menu = pygame_menu.Menu(500, 500, 'Healthy Life',theme=pygame_menu.themes.THEME_ORANGE)
-    menu.add.text_input('Nome: ', onchange=set_name, )
-    menu.add.selector('Sexo: ', [('Masculino',1), ('Feminino',2)], onchange=set_gender, default=1)
-    menu.add.selector('Som: ', [('Ligado', 1), ('Desligado', 2)], onchange=set_music)
-    menu.add.button('Instruções', show_instructions)
-    menu.add.button('Jogar', home)
-    menu.add.button('Ranking', ranking)
-    menu.add.button('Quit', pygame_menu.events.EXIT)
-    menu.mainloop(SCREEN)
+
+def main_menu():
+    while True:
+        menu = pygame_menu.Menu(500, 500, 'Healthy Life',theme=pygame_menu.themes.THEME_ORANGE)
+        menu.add.text_input('Nome: ', onchange=set_name, )
+        menu.add.selector('Sexo: ', [('Masculino',1), ('Feminino',2)], onchange=set_gender, default=1)
+        menu.add.selector('Som: ', [('Ligado', 1), ('Desligado', 2)], onchange=set_music)
+        menu.add.button('Instruções', show_instructions)
+        menu.add.button('Jogar', home)
+        menu.add.button('Ranking', show_ranking)
+        menu.add.button('Sair', pygame_menu.events.EXIT)
+        menu.mainloop(SCREEN)
+
+if __name__ == "__main__":
+    main_menu()

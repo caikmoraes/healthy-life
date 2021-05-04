@@ -35,6 +35,11 @@ class Girl(pygame.sprite.Sprite):
         self.img = pygame.image.load(self.walkingDown[self.pos])
         self.rect = self.img.get_rect()
         self.rect.center = (200,300)
+        self.max_pontuation = 0
+
+    def new_record(self):
+        if self.points > self.max_pontuation:
+            self.max_pontuation = self.points
 
     def hit(self, enemy):
         self.health -= enemy.dmg
@@ -48,32 +53,15 @@ class Girl(pygame.sprite.Sprite):
         if self.running:
             if direction == UP:
                 self.rect.move_ip(0, -self.runSpeed)
-                self.img = pygame.image.load(self.walkingUp[self.pos])
-                if self.pos == self.pos_max:
-                    self.pos = 1
-                else:
-                    self.pos += 1
             elif direction == DOWN:
                 self.rect.move_ip(0, self.runSpeed)
-                self.img = pygame.image.load(self.walkingDown[self.pos])
-                if self.pos == self.pos_max:
-                    self.pos = 1
-                else:
-                    self.pos += 1
+
             elif direction == LEFT:
                 self.rect.move_ip(-self.runSpeed, 0)
-                self.img = pygame.image.load(self.walkingLeft[self.pos])
-                if self.pos == self.pos_max:
-                    self.pos = 1
-                else:
-                    self.pos += 1
+
             elif direction == RIGHT:
                 self.rect.move_ip(self.runSpeed, 0)
-                self.img = pygame.image.load(self.walkingRight[self.pos])
-                if self.pos >= self.pos_max:
-                    self.pos = 1
-                else:
-                    self.pos += 1
+
         else:
             if direction == UP:
                 self.rect.move_ip(0, -self.walkSpeed)
@@ -103,3 +91,10 @@ class Girl(pygame.sprite.Sprite):
                     self.pos = 1
                 else:
                     self.pos += 1
+                
+    def next_animation(self):
+        self.img = pygame.image.load(self.walkingRight[self.pos])
+        if self.pos >= self.pos_max:
+            self.pos = 1
+        else:
+            self.pos += 1
