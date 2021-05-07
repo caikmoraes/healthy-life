@@ -53,15 +53,21 @@ class Boy(pygame.sprite.Sprite):
     def update(self, direction):
         if self.running:
             if direction == UP:
-                self.rect.move_ip(0, -self.runSpeed)
+                if not self.rect.bottom <= SCREEN_HEIGHT - 420:
+                    self.rect.move_ip(0, -self.runSpeed)
+
+
             elif direction == DOWN:
-                self.rect.move_ip(0, self.runSpeed)
+                if not self.rect.bottom >= SCREEN_HEIGHT - 210:
+                    self.rect.move_ip(0, self.runSpeed)
 
             elif direction == LEFT:
-                self.rect.move_ip(-self.runSpeed, 0)
+                if not self.rect.left <= 5:
+                    self.rect.move_ip(-self.runSpeed, 0)
 
             elif direction == RIGHT:
-                self.rect.move_ip(self.runSpeed, 0)
+                if not self.rect.right >= SCREEN_WIDTH/2:
+                    self.rect.move_ip(self.runSpeed, 0)
 
         else:
             if direction == UP:

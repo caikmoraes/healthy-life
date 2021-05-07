@@ -8,6 +8,7 @@ from classes.Boy import Boy
 from classes.FatFood import FatFood
 from classes.HalthyFood import HealthyFood
 import random
+import glob
 
 pygame.init()
 
@@ -22,6 +23,9 @@ SCREEN_HEIGHT = 600
 SCREEN = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), 0, 32)
 
 BASICFONT = pygame.font.Font('freesansbold.ttf', 16)
+
+HOME = pygame.image.load('images/scene/casa.jpeg')
+FLOREST = pygame.image.load('images/scene/floresta.jpeg')
 
 pygame.display.set_caption("Healthy-Life")
 
@@ -98,6 +102,7 @@ def set_music(key, value):
     pass
 
 def home():
+
     walkLeft = walkUp = walkRight = walkDown = False
     if gender == 1:
         character = Boy(characterName)
@@ -106,10 +111,12 @@ def home():
     players.append(character)
 
     inHome = True
+    room = pygame.transform.scale(HOME, (600,400))
     while inHome:
         character.running = False
         clock.tick(30)
-        SCREEN.fill((80,80,80))
+        SCREEN.fill((0,0,0))
+        SCREEN.blit(room, (SCREEN.get_rect()))
 
         for event in pygame.event.get():
             if event.type == QUIT:
@@ -168,7 +175,7 @@ def home():
 
         SCREEN.blit(character.img, character.rect)
 
-        if character.rect.top > SCREEN_HEIGHT:
+        if character.rect.top > SCREEN_HEIGHT - 250:
             game(character)
 
         pygame.display.flip()
@@ -178,24 +185,28 @@ def game(character):
     character.rect.center = (SCREEN_WIDTH/2, SCREEN_HEIGHT/2)
     running = True
     character.running = running
-
+    fat_timer = 1000
+    health_timer = 1100
     direction = DOWN
     fatFoods = pygame.sprite.Group()
     healthyFoods = pygame.sprite.Group()
     gameSprites = pygame.sprite.Group()
     gameSprites.add(character)
     ADD_FATFOOD = pygame.USEREVENT + 1
-    pygame.time.set_timer(ADD_FATFOOD, 500)
+    pygame.time.set_timer(ADD_FATFOOD, fat_timer)
     ADD_HEALTHYFOOD = pygame.USEREVENT + 2
-    pygame.time.set_timer(ADD_HEALTHYFOOD, 500)
+    pygame.time.set_timer(ADD_HEALTHYFOOD, health_timer)
     ADD_POINTS = pygame.USEREVENT + 3
     pygame.time.set_timer(ADD_POINTS, 500)
     SET_ANIMATION = pygame.USEREVENT + 4
     pygame.time.set_timer(SET_ANIMATION, 35)
+
+    florest = pygame.transform.scale(FLOREST, (800,600))
+
     while running:
         
         clock.tick(30)
-        SCREEN.fill((80,80,80))
+        SCREEN.blit(florest, SCREEN.get_rect())
 
         for event in pygame.event.get():
             if event.type == QUIT:

@@ -18,7 +18,7 @@ class HealthyFood(pygame.sprite.Sprite):
         self.rect = self.img.get_rect()
         self.rect.center = (
             random.randint(SCREEN_WIDTH + 20, SCREEN_WIDTH + 40),
-            random.randint(0, SCREEN_HEIGHT) 
+            random.randint(SCREEN_HEIGHT - 420, SCREEN_HEIGHT - 210) 
         )
 
     def update(self):
