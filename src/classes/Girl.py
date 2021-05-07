@@ -65,7 +65,7 @@ class Girl(pygame.sprite.Sprite):
                     self.rect.move_ip(-self.runSpeed, 0)
 
             elif direction == RIGHT:
-                if not self.rect.right >= SCREEN_WIDTH/2:
+                if not self.rect.right >= SCREEN_WIDTH/2 + 100:
                     self.rect.move_ip(self.runSpeed, 0)
 
         else:
