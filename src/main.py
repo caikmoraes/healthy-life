@@ -30,6 +30,26 @@ clock = pygame.time.Clock()
 players = []
 
 ranking = True
+
+def show_points(c):
+    pointLegend = BASICFONT.render('Pontos: %d' % c.points, True, (255,255,255))
+    pointRect = pointLegend.get_rect()
+    pointRect.bottomleft = (10, SCREEN_HEIGHT - 10)
+    SCREEN.blit(pointLegend, pointRect)
+
+def show_health(c):
+    bar_width= 100
+    bar_height= 10
+    healthLegend = BASICFONT.render('Saúde:', True, (255,255,255))
+    legend_width = healthLegend.get_width()
+    health_bar = pygame.Rect(legend_width + 20, SCREEN_HEIGHT - 43, c.health, bar_height)
+    background_bar = pygame.Rect(legend_width + 20, SCREEN_HEIGHT - 43, bar_width, bar_height)
+    healthRect = healthLegend.get_rect()
+    healthRect.bottomleft = (10, SCREEN_HEIGHT - 30)
+    SCREEN.blit(healthLegend, healthRect)
+    pygame.draw.rect(SCREEN, (100,100,100), background_bar)
+    pygame.draw.rect(SCREEN, (200,0,0), health_bar)
+
 def close_ranking():
     global ranking
     ranking = False
@@ -83,9 +103,8 @@ def home():
         character = Boy(characterName)
     elif gender == 2:
         character = Girl(characterName)
+    players.append(character)
 
-    if not players.__contains__(character):
-        players.append(character)
     inHome = True
     while inHome:
         character.running = False
@@ -273,15 +292,9 @@ def game(character):
 
 
 
-        pointLegend = BASICFONT.render('Pontos: %d' % character.points, True, (255,255,255))
-        pointRect = pointLegend.get_rect()
-        pointRect.bottomleft = (10, SCREEN_HEIGHT - 10)
-        SCREEN.blit(pointLegend, pointRect)
+        show_points(character)
 
-        healthLegend = BASICFONT.render('Saúde: %d' % character.health, True, (255,255,255))
-        healthRect = healthLegend.get_rect()
-        healthRect.bottomleft = (10, SCREEN_HEIGHT - 30)
-        SCREEN.blit(healthLegend, healthRect)
+        show_health(character)
 
         pygame.display.flip()
 
