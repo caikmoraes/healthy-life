@@ -7,8 +7,8 @@ from pygame.locals import *
 from classes.Boy import Boy
 from classes.FatFood import FatFood
 from classes.HalthyFood import HealthyFood
+from classes.GameCam import GameCam
 import random
-import glob
 
 pygame.init()
 
@@ -181,6 +181,11 @@ def home():
         pygame.display.flip()
 
 def game(character):
+    camera = GameCam(SCREEN_WIDTH/2, SCREEN_HEIGHT/2)
+    off_camera = GameCam(SCREEN_WIDTH+SCREEN_WIDTH/2, SCREEN_HEIGHT/2)
+    cameras = pygame.sprite.Group()
+    cameras.add(camera)
+    cameras.add(off_camera)
     walkLeft = walkUp = walkRight = walkDown = False
     character.rect.center = (SCREEN_WIDTH/2, SCREEN_HEIGHT/2)
     running = True
@@ -201,12 +206,10 @@ def game(character):
     SET_ANIMATION = pygame.USEREVENT + 4
     pygame.time.set_timer(SET_ANIMATION, 35)
 
-    florest = pygame.transform.scale(FLOREST, (800,600))
-
     while running:
-        
         clock.tick(30)
-        SCREEN.blit(florest, SCREEN.get_rect())
+        for cam in cameras:
+            SCREEN.blit(cam.img, cam.rect)
 
         for event in pygame.event.get():
             if event.type == QUIT:
@@ -273,6 +276,7 @@ def game(character):
             elif event.type == SET_ANIMATION:
                 character.next_animation()
 
+        cameras.update()
 
         if walkRight or walkDown or walkLeft or walkUp:
             character.update(direction)
