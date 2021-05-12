@@ -1,3 +1,4 @@
+from classes.Levels import Level
 from random import random
 import pygame
 import pygame_menu
@@ -9,8 +10,11 @@ from classes.FatFood import FatFood
 from classes.HalthyFood import HealthyFood
 from classes.GameCam import GameCam
 import random
+import os
 
 pygame.init()
+
+
 
 UP = "up"
 DOWN = "down"
@@ -30,6 +34,15 @@ FLOREST = pygame.image.load('images/scene/floresta.jpeg')
 pygame.display.set_caption("Healthy-Life")
 
 clock = pygame.time.Clock()
+
+pygame.mixer.pre_init(44100, 16, 2, 4096)
+pygame.mixer.init()
+gaming_song = pygame.mixer.Sound(os.path.join('sounds', 'gaming.ogg'))
+home_song = pygame.mixer.Sound(os.path.join('sounds', 'home.ogg'))
+running_song = pygame.mixer.Sound(os.path.join('sounds', 'running.ogg'))
+gameover_song = pygame.mixer.Sound(os.path.join('sounds', 'gameover.ogg'))
+
+sound_on = True
 
 players = []
 
@@ -54,6 +67,12 @@ def show_health(c):
     pygame.draw.rect(SCREEN, (100,100,100), background_bar)
     pygame.draw.rect(SCREEN, (200,0,0), health_bar)
 
+def show_current_level(c):
+    level = BASICFONT.render('Nível: %d' % c.current_level, True, (255,255,255))
+    level_rect = level.get_rect()
+    level_rect.bottomleft = (SCREEN_WIDTH/2, SCREEN_HEIGHT - (SCREEN_HEIGHT - 100))
+    SCREEN.blit(level, level_rect)
+
 def close_ranking():
     global ranking
     ranking = False
@@ -72,7 +91,7 @@ def show_ranking():
             menu.add.label('Sem jogadores cadastrados')
         else:
             for p in players:
-                menu.add.label('%s --> %d' % (p.name, p.max_pontuation))
+                menu.add.label('%s --> Pontos: %d --> Nível: %d' % (p.name, p.max_pontuation, p.high_level))
 
         menu.add.button('Voltar', action=main_menu)
         menu.mainloop(ranking_screen)
@@ -85,7 +104,6 @@ def show_instructions():
 gender = ''
 def set_gender(key, value):
     global gender
-    print(value)
     gender = value
     pass
 
@@ -98,11 +116,42 @@ def set_name(name):
     pass
 
 def set_music(key, value):
-    # Do the job here !
+    global sound_on
+    if value == 1:
+        sound_on = True
+    else:
+        sound_on = False
+    play_music_by_env('menu')
     pass
 
-def home():
+def play_music_by_env(env):
+    global home_song
+    global running_song
+    global gameover_song
+    global gaming_song
+    global sound_on
+    if not sound_on:
+        home_song.stop()
+        running_song.stop()
+        gameover_song.stop()
+        gaming_song.stop()
+    else:    
+        home_song.stop()
+        running_song.stop()
+        gameover_song.stop()
+        gaming_song.stop()
+        if env == 'home':
+            home_song.play()
+        elif env == 'florest':
+            running_song.play()
+        elif env == 'menu':
+            gaming_song.play()
+        elif env == 'gameover':
+            gameover_song.play()
+        
 
+def home():
+    play_music_by_env('home')
     walkLeft = walkUp = walkRight = walkDown = False
     if gender == 1:
         character = Boy(characterName)
@@ -123,7 +172,7 @@ def home():
                 pygame.quit()
             elif event.type == KEYDOWN:
                 if event.key == K_ESCAPE:
-                    inHome = False
+                    main_menu()
                 if event.key == K_LEFT:
                     walkLeft = True
                     walkRight = False
@@ -177,15 +226,22 @@ def home():
 
         if character.rect.top > SCREEN_HEIGHT - 250:
             game(character)
+            
 
         pygame.display.flip()
 
 def game(character):
+    play_music_by_env('florest')
+    gaming_song.stop()
+    running_song.play()
     camera = GameCam(SCREEN_WIDTH/2, SCREEN_HEIGHT/2)
     off_camera = GameCam(SCREEN_WIDTH+SCREEN_WIDTH/2, SCREEN_HEIGHT/2)
     cameras = pygame.sprite.Group()
     cameras.add(camera)
     cameras.add(off_camera)
+    level_health = Level(True)
+    level_fat = Level(False)
+    levels = [level_health, level_fat]
     walkLeft = walkUp = walkRight = walkDown = False
     character.rect.center = (SCREEN_WIDTH/2, SCREEN_HEIGHT/2)
     running = True
@@ -205,6 +261,8 @@ def game(character):
     pygame.time.set_timer(ADD_POINTS, 500)
     SET_ANIMATION = pygame.USEREVENT + 4
     pygame.time.set_timer(SET_ANIMATION, 35)
+    NEXT_LEVEL = pygame.USEREVENT + 5
+    pygame.time.set_timer(NEXT_LEVEL, 10000)
 
     while running:
         clock.tick(30)
@@ -216,7 +274,7 @@ def game(character):
                 pygame.quit()
             elif event.type == KEYDOWN:
                 if event.key == K_ESCAPE:
-                    running = False
+                    home()
                 if event.key == K_LEFT:
                     walkLeft = True
                     walkRight = False
@@ -275,6 +333,15 @@ def game(character):
                     character.addPoints(1)
             elif event.type == SET_ANIMATION:
                 character.next_animation()
+            elif event.type == NEXT_LEVEL:
+                if character.alive:
+                    character.next_level()
+                    for level in levels:
+                        level.set_timer()
+                        if level.is_health:
+                            health_timer += level.timer
+                        else:
+                            fat_timer += level.timer
 
         cameras.update()
 
@@ -285,6 +352,7 @@ def game(character):
         healthyFoods.update()
 
         if not character.alive:
+            play_music_by_env('gameover')
             character.new_record()
             character.kill()
             gameOver = BASICFONT.render('GAME OVER. Pressione ESC para ir para o quarto.', True, (255,50,50))
@@ -311,10 +379,13 @@ def game(character):
 
         show_health(character)
 
+        show_current_level(character)
+
         pygame.display.flip()
 
 
 def main_menu():
+    play_music_by_env('menu')
     while True:
         menu = pygame_menu.Menu(500, 500, 'Healthy Life',theme=pygame_menu.themes.THEME_ORANGE)
         menu.add.text_input('Nome: ', onchange=set_name, )

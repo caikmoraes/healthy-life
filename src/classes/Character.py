@@ -34,6 +34,8 @@ class Character(pygame.sprite.Sprite):
         self.rect = self.img.get_rect()
         self.rect.center = (200,300)
         self.max_pontuation = 0
+        self.high_level = 1
+        self.current_level = 1
 
     def new_record(self):
         if self.points > self.max_pontuation:
@@ -102,3 +104,17 @@ class Character(pygame.sprite.Sprite):
             self.pos = 1
         else:
             self.pos += 1
+
+    def next_level(self):
+        self.current_level += 1
+        self.increase_health()
+
+    def set_high_level(self):
+        if self.current_level > self.high_level:
+            self.high_level = self.current_level
+    
+    def increase_health(self):
+        if self.current_level % 2 == 0:
+            self.health += 10
+            if self.health >= 100:
+                self.health = 100
