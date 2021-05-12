@@ -232,8 +232,6 @@ def home():
 
 def game(character):
     play_music_by_env('florest')
-    gaming_song.stop()
-    running_song.play()
     camera = GameCam(SCREEN_WIDTH/2, SCREEN_HEIGHT/2)
     off_camera = GameCam(SCREEN_WIDTH+SCREEN_WIDTH/2, SCREEN_HEIGHT/2)
     cameras = pygame.sprite.Group()
@@ -352,13 +350,9 @@ def game(character):
         healthyFoods.update()
 
         if not character.alive:
-            play_music_by_env('gameover')
             character.new_record()
             character.kill()
-            gameOver = BASICFONT.render('GAME OVER. Pressione ESC para ir para o quarto.', True, (255,50,50))
-            gameOverRect = gameOver.get_rect()
-            gameOverRect.bottomleft = (SCREEN_WIDTH/2 - 200, SCREEN_HEIGHT/2)
-            SCREEN.blit(gameOver, gameOverRect)
+            gameover()
         else:
             for sprite in gameSprites:
                 SCREEN.blit(sprite.img, sprite.rect)
@@ -383,6 +377,21 @@ def game(character):
 
         pygame.display.flip()
 
+def gameover():
+    play_music_by_env('gameover')
+    while True:
+        for event in pygame.event.get():
+            if event.type == QUIT:
+                pygame.quit()
+            elif event.type == KEYDOWN:
+                if event.key == K_ESCAPE:
+                    home()
+        
+        gameOver = BASICFONT.render('GAME OVER. Pressione ESC para ir para o quarto.', True, (255,50,50))
+        gameOverRect = gameOver.get_rect()
+        gameOverRect.bottomleft = (SCREEN_WIDTH/2 - 200, SCREEN_HEIGHT/2)
+        SCREEN.blit(gameOver, gameOverRect)
+        pygame.display.flip()
 
 def main_menu():
     play_music_by_env('menu')
