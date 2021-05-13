@@ -85,6 +85,12 @@ def show_ranking():
     global players
     players.sort(key= order_ranking, reverse=True)
     while True:
+        for event in pygame.event.get():
+            if event.type == QUIT:
+                pygame.quit()
+            elif event.type == KEYDOWN:
+                if event.key == K_ESCAPE:
+                    main_menu()
         ranking_screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), 0, 32)
         menu = pygame_menu.Menu(500, 500, 'Ranking',theme=pygame_menu.themes.THEME_ORANGE)
         if len(players) <= 0:
@@ -237,15 +243,13 @@ def game(character):
     cameras = pygame.sprite.Group()
     cameras.add(camera)
     cameras.add(off_camera)
-    level_health = Level(True)
-    level_fat = Level(False)
-    levels = [level_health, level_fat]
+    level = Level()
     walkLeft = walkUp = walkRight = walkDown = False
     character.rect.center = (SCREEN_WIDTH/2, SCREEN_HEIGHT/2)
     running = True
     character.running = running
     fat_timer = 1000
-    health_timer = 1100
+    health_timer = 1500
     direction = DOWN
     fatFoods = pygame.sprite.Group()
     healthyFoods = pygame.sprite.Group()
@@ -333,13 +337,15 @@ def game(character):
                 character.next_animation()
             elif event.type == NEXT_LEVEL:
                 if character.alive:
+                    level.next_level()
                     character.next_level()
-                    for level in levels:
-                        level.set_timer()
-                        if level.is_health:
-                            health_timer += level.timer
-                        else:
-                            fat_timer += level.timer
+                    fat_timer += level.fat_timer
+                    health_timer += level.health_timer
+                    if fat_timer < 1:
+                        fat_timer = 200
+                    pygame.time.set_timer(ADD_FATFOOD, fat_timer)
+                    pygame.time.set_timer(ADD_HEALTHYFOOD, health_timer)
+
 
         cameras.update()
 
@@ -351,6 +357,7 @@ def game(character):
 
         if not character.alive:
             character.new_record()
+            character.set_high_level()
             character.kill()
             gameover()
         else:
