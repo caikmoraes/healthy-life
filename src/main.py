@@ -28,7 +28,7 @@ SCREEN = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), 0, 32)
 
 BASICFONT = pygame.font.Font('freesansbold.ttf', 16)
 
-HOME = pygame.image.load('images/scene/casa.jpeg')
+HOME = pygame.image.load('images/scene/room.png')
 FLOREST = pygame.image.load('images/scene/floresta.jpeg')
 
 pygame.display.set_caption("Healthy-Life")
@@ -166,12 +166,12 @@ def home():
     players.append(character)
 
     inHome = True
-    room = pygame.transform.scale(HOME, (600,400))
+    room = pygame.transform.scale(HOME, (300,300))
     while inHome:
         character.running = False
         clock.tick(30)
         SCREEN.fill((0,0,0))
-        SCREEN.blit(room, (SCREEN.get_rect()))
+        SCREEN.blit(room, (SCREEN_WIDTH/3, SCREEN_HEIGHT/4))
 
         for event in pygame.event.get():
             if event.type == QUIT:
@@ -230,7 +230,8 @@ def home():
 
         SCREEN.blit(character.img, character.rect)
 
-        if character.rect.top > SCREEN_HEIGHT - 250:
+        print(character.rect.bottom)
+        if character.rect.left < 250:
             game(character)
             
 

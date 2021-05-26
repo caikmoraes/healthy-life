@@ -32,7 +32,7 @@ class Character(pygame.sprite.Sprite):
         self.pos_max = 8
         self.img = pygame.image.load(self.walkingDown[self.pos])
         self.rect = self.img.get_rect()
-        self.rect.center = (200,300)
+        self.rect.center = (SCREEN_WIDTH/2,(SCREEN_HEIGHT/2) + 20)
         self.max_pontuation = 0
         self.high_level = 1
         self.current_level = 1
@@ -70,33 +70,44 @@ class Character(pygame.sprite.Sprite):
 
         else:
             if direction == UP:
-                self.rect.move_ip(0, -self.walkSpeed)
-                self.img = pygame.image.load(self.walkingUp[self.pos])
-                if self.pos == self.pos_max:
-                    self.pos = 1
-                else:
-                    self.pos += 1
+                if not self.rect.bottom <= 340:
+                    self.rect.move_ip(0, -self.walkSpeed)
+                    self.img = pygame.image.load(self.walkingUp[self.pos])
+                    if self.pos == self.pos_max:
+                        self.pos = 1
+                    else:
+                        self.pos += 1
             elif direction == DOWN:
-                self.rect.move_ip(0, self.walkSpeed)
-                self.img = pygame.image.load(self.walkingDown[self.pos])
-                if self.pos == self.pos_max:
-                    self.pos = 1
-                else:
-                    self.pos += 1
+                if not self.rect.bottom >= SCREEN_HEIGHT - 150:
+                    self.rect.move_ip(0, self.walkSpeed)
+                    self.img = pygame.image.load(self.walkingDown[self.pos])
+                    if self.pos == self.pos_max:
+                        self.pos = 1
+                    else:
+                        self.pos += 1
             elif direction == LEFT:
-                self.rect.move_ip(-self.walkSpeed, 0)
-                self.img = pygame.image.load(self.walkingLeft[self.pos])
-                if self.pos == self.pos_max:
-                    self.pos = 1
-                else:
-                    self.pos += 1
+                if not self.rect.bottom <= 335 and not self.rect.left <= 330:
+                    self.rect.move_ip(-self.walkSpeed, 0)
+                    self.img = pygame.image.load(self.walkingLeft[self.pos])
+                    if self.pos == self.pos_max:
+                        self.pos = 1
+                    else:
+                        self.pos += 1
+                elif self.rect.bottom >= 373 and not self.rect.left < 250:
+                    self.rect.move_ip(-self.walkSpeed, 0)
+                    self.img = pygame.image.load(self.walkingLeft[self.pos])
+                    if self.pos == self.pos_max:
+                        self.pos = 1
+                    else:
+                        self.pos += 1
             elif direction == RIGHT:
-                self.rect.move_ip(self.walkSpeed, 0)
-                self.img = pygame.image.load(self.walkingRight[self.pos])
-                if self.pos >= self.pos_max:
-                    self.pos = 1
-                else:
-                    self.pos += 1
+                if not self.rect.right >= SCREEN_WIDTH - 235:
+                    self.rect.move_ip(self.walkSpeed, 0)
+                    self.img = pygame.image.load(self.walkingRight[self.pos])
+                    if self.pos >= self.pos_max:
+                        self.pos = 1
+                    else:
+                        self.pos += 1
                 
     def next_animation(self):
         self.img = pygame.image.load(self.walkingRight[self.pos])
