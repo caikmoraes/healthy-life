@@ -230,7 +230,8 @@ def home():
 
         SCREEN.blit(character.img, character.rect)
 
-        print(character.rect.bottom)
+        print((character.rect.left, character.rect.bottom))
+        
         if character.rect.left < 250:
             game(character)
             

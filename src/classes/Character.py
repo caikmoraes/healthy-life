@@ -70,7 +70,11 @@ class Character(pygame.sprite.Sprite):
 
         else:
             if direction == UP:
-                if not self.rect.bottom <= 340:
+                if self.rect.left <= 317 and self.rect.bottom <= 375:
+                    # self.rect.move_ip(0, -self.walkSpeed)
+                    self.img = pygame.image.load(self.walkingUp[self.pos])
+                    
+                elif not self.rect.bottom <= 340:
                     self.rect.move_ip(0, -self.walkSpeed)
                     self.img = pygame.image.load(self.walkingUp[self.pos])
                     if self.pos == self.pos_max:
