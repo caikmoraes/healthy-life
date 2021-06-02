@@ -1,3 +1,4 @@
+from pygame_menu import menu
 from classes.Levels import Level
 from random import random
 import pygame
@@ -104,8 +105,25 @@ def show_ranking():
     
 
 def show_instructions():
-    # Necessita criar instruções
-    pass
+    while True:
+        for event in pygame.event.get():
+            if event.type == QUIT:
+                pygame.quit()
+            elif event.type == KEYDOWN:
+                if event.key == K_ESCAPE:
+                    main_menu()
+        instructions_screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), 0, 32)
+        screen = pygame_menu.Menu(600, 800, 'Instruções',theme=pygame_menu.themes.THEME_ORANGE)
+        instructions = "Utilize as setas CIMA/BAIXO/ESQUERDA/DIREITA para mover o personagem."\
+            "\nO quarto do personagem é seu local de descanso. Portanto, para recuperar toda a sua saúde, vá para o quarto."\
+            "\nPara inicar uma corrida, saia do quarto. Ao iniciá-la busque por alimentos nutritivos para ganhar um bônus de pontuação."\
+            "\nEvite comidas não nutritivas, como hambúrgueres etc, pois elas diminuem sua saúde. Se a saúde chegar a zero é Game Over."\
+            "\nQuanto melhor sua alimentação e com uma prática de exercícios regular, melhor é sua saude."\
+            "\nIsso é HEALTHY-LIFE!"
+        screen.add_label(instructions, max_char=-1, font_size=16)
+        screen.add.button('Voltar', main_menu)
+        screen.mainloop(instructions_screen)
+        pass
 
 gender = ''
 def set_gender(key, value):
